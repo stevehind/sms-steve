@@ -1,5 +1,5 @@
 python-dotenv
-python-flask
-python-twilio.rest 
-python-os 
-python-twilio.twiml.messaging_response
+flask
+twilio.rest 
+os 
+twilio.twiml.messaging_response
