@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route("/", methods = ['GET'])
 def home():
-    return "Home"
+    return "Go to /sms-steve to send Steve an SMS."
 
 # Send a message to Steve
 @app.route("/sms-steve", methods = ['GET'])
