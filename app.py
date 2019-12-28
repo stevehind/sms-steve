@@ -5,9 +5,8 @@ from dotenv import load_dotenv
 from twilio.twiml.messaging_response import MessagingResponse
 
 # Set up authentication
-#project_folder = os.path.expanduser('~/Google Drive/Programming/twilio-test')
-#load_dotenv(os.path.join(project_folder, '.env'))
-load_dotenv
+project_folder = os.path.expanduser('~/Google Drive/Programming/twilio-test')
+load_dotenv(os.path.join(project_folder, '.env'))
 account_sid = os.getenv('ACCOUNT_SID')
 auth_token = os.getenv('AUTH_TOKEN')
 client = Client(account_sid, auth_token)
@@ -28,7 +27,7 @@ def sms_steve():
     to_number = os.getenv('TO_NUMBER')
 
     # Configure the message
-    message = "Enjoy this text message"
+    message = "Steve! Someone sent you a message"
 
     # Send the message
 
@@ -39,7 +38,9 @@ def sms_steve():
                         to = to_number
                     )    
 
-    return str(message.sid)
+    print(message.sid)
+
+    return "We texted Steve"
 
 # Reply to inbound messages
 @app.route("/sms", methods = ['GET', 'POST'])
