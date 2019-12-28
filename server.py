@@ -18,6 +18,7 @@ app = Flask(__name__)
 def home():
     return "Home"
 
+# Send a message to Steve
 @app.route("/sms-steve", methods = ['GET'])
 def sms_steve():
 
@@ -39,6 +40,7 @@ def sms_steve():
 
     return str(message.sid)
 
+# Reply to inbound messages
 @app.route("/sms", methods = ['GET', 'POST'])
 def reply_to_sms():
     resp = MessagingResponse()
