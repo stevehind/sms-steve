@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 from twilio.twiml.messaging_response import MessagingResponse
 
 # Set up authentication
-project_folder = os.path.expanduser('~/Google Drive/Programming/twilio-test')
-load_dotenv(os.path.join(project_folder, '.env'))
+#project_folder = os.path.expanduser('~/Google Drive/Programming/twilio-test')
+#load_dotenv(os.path.join(project_folder, '.env'))
+load_dotenv
 account_sid = os.getenv('ACCOUNT_SID')
 auth_token = os.getenv('AUTH_TOKEN')
 client = Client(account_sid, auth_token)
