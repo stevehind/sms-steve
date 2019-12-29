@@ -3,6 +3,7 @@ from twilio.rest import Client
 import os
 from dotenv import load_dotenv
 from twilio.twiml.messaging_response import MessagingResponse
+import json
 
 # Set up authentication
 project_folder = os.path.expanduser('~/Google Drive/Programming/twilio-test')
@@ -19,37 +20,50 @@ def home():
     return "Go to /sms-steve to send Steve an SMS."
 
 # Send a message to Steve
-@app.route("/sms-steve", methods = ['GET'])
+@app.route("/sms-steve", methods = ['GET', 'POST'])
 def sms_steve():
+    custom = False
+
+    # Handle the input and configure the message
+    try:
+        request_data = json.loads(request.data)
+        data = request_data['message']
+        message = data
+        custom = True
+    except Exception:
+        message = "Someone sent an SMS, but there was no custom message."
 
     # Phone number variables
     from_number = os.getenv('FROM_NUMBER')
     to_number = os.getenv('TO_NUMBER')
 
-    # Configure the message
-    message = "Steve! Someone sent you a message"
-
     # Send the message
+    try:
+        message = client.messages \
+                        .create(
+                            body = message,
+                            from_ = from_number,
+                            to = to_number
+                        )    
 
-    message = client.messages \
-                    .create(
-                        body = message,
-                        from_ = from_number,
-                        to = to_number
-                    )    
+        print(message.sid)
 
-    print(message.sid)
-
-    return "We texted Steve"
+        if custom:
+            return "Custom message sent to Steve."
+        else:
+            return "Default message sent to Steve."
+    
+    except Exception as e:
+        return e
 
 # Reply to inbound messages
 @app.route("/sms", methods = ['GET', 'POST'])
 def reply_to_sms():
     resp = MessagingResponse()
 
-    resp.message("Hi this is Steve inc. You've reached Steve.")
+    resp.message("Steve got this SMS. Did he read it? Who knows?")
 
     return str(resp)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug = True)
