@@ -57,9 +57,12 @@ def sms_steve():
     except Exception as e:
         return str(e)
 
-# Twilio webhook testing command: twilio phone-numbers:update "+12244878383" --sms-url="http://localhost:5000/sms"
+# Twilio webhook testing command:
+# LOCAL: twilio phone-numbers:update "+12244878383" --sms-url="http://localhost:5000/sms"
+# DEPLOYED: twilio phone-numbers:update "+12244878383" --sms-url="https://sms-22448-steve.herokuapp.com/sms"
+
 # Reply to inbound messages
-@app.route("/sms", methods = ['POST'])
+@app.route("/sms", methods = ['GET', 'POST'])
 def reply_to_sms():
     # Give a contextual reply to the inbound
     try:
