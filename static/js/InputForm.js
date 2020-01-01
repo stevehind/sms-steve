@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import './InputForm.css';
-import api from './api.js';
+import api from './api.js.js';
 
 class InputForm extends Component {
 

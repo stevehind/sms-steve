@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request,render_template
 from twilio.rest import Client
 import os
 from dotenv import load_dotenv
@@ -20,11 +20,14 @@ from_number = os.getenv('FROM_NUMBER')
 
 
 # Define the app
-app = Flask(__name__)
+app = Flask(__name__,
+    static_folder = "./static/dist",
+    template_folder = "./static"
+)
 
 @app.route("/", methods = ['GET'])
-def home():
-    return "Go to /sms-steve to send Steve an SMS from the web.\nText +122448-steve (22448-78383) to text Steve directly."
+def index():
+    return render_template("index.html") 
 
 # Send a message to Steve
 @app.route("/web-sms", methods = ['GET', 'POST'])
@@ -88,4 +91,4 @@ def reply_to_sms():
         return str(error_response)
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run()
