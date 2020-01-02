@@ -11,7 +11,8 @@ class InputForm extends Component {
             disabled: false,
             succeeded: false,
             processing: false,
-            failed: false
+            failed: false,
+            error: null
         }
         
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,17 +29,49 @@ class InputForm extends Component {
     async handleSubmit(ev){
         ev.preventDefault();
 
+        this.setState({processing: true})
+
         api
             .send_sms({
                 name: this.state.sender_name,
                 number: this.state.sender_number,
                 message: this.state.sender_message
             })
+            .then(payload => {
+                if (payload.error) {
+                    this.setState({
+                        error: `Sending failed: ${payload.error.message}`,
+                        disabled: false,
+                        proessing: false
+                    });
+                    console.log("[error", payload.error);
+                } else {
+                    this.setState({
+                        processing: false,
+                        succeeded: true,
+                        error: "",
+                    });
+                    console.log("Success!")
+                }
+            })
             .catch(err => {
-                this.setState({error: err.message});
+                this.setState({
+                    error: err.message,
+                    failed: true,
+                    processing: false
+                });
+                console.log(err);
             });
-
     }
+
+    renderSuccess() {
+        return (
+          <div className="sr-field-success message">
+            <h3>Message sent!</h3>
+            <p>Refresh to send another.</p>
+          </div>
+        );
+      }
 
     renderForm() {
         var style = {
@@ -58,8 +91,11 @@ class InputForm extends Component {
           };
 
         return (
-            <div className="full-container vertical-center ">
+            <div className="full-container vertical-center">
                 <form onSubmit={this.handleSubmit}>
+                    <h3>Just like using your phone...</h3>
+                    <h4>...except a web app...</h4>
+                    <h5>...and also dumber.</h5>
                     <h4>Enter your details and message below.</h4>
                     <div className="sr-combo-inputs" style={style}>
                         <div className="sr-combo-inputs-row">
@@ -87,10 +123,13 @@ class InputForm extends Component {
                                 className="sr-input"
                                 onChange={this.handleChange}
                             />
+                        <div className>
+                            {this.state.failed ? "Sending message failed. Try again." : null}
+                        </div>
                         </div>
                         {!this.state.succeeded && (
                             <button className="btn" disabled={this.state.disabled}>
-                                {this.state.processing ? "Sending..." : "Send"}
+                                {this.state.failed ? "Try again." : "Send"}
                             </button>
                         )}
                     </div>
@@ -102,6 +141,7 @@ class InputForm extends Component {
     render() {
         return (
             <div>
+                {this.state.succeeded && this.renderSuccess()}
                 {!this.state.succeeded && this.renderForm()}
             </div>
         );

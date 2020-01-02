@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template, jsonify
 from twilio.rest import Client
 import os
 from dotenv import load_dotenv
@@ -20,11 +20,15 @@ from_number = os.getenv('FROM_NUMBER')
 
 
 # Define the app
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder="build/static",
+    template_folder="build"
+)
 
 @app.route("/", methods = ['GET'])
 def home():
-    return "Go to /sms-steve to send Steve an SMS from the web.\nText +122448-steve (22448-78383) to text Steve directly."
+    return render_template("index.html")
 
 # Send a message to Steve
 @app.route("/web-sms", methods = ['GET', 'POST'])
@@ -50,12 +54,12 @@ def sms_steve():
         print(message.sid)
 
         if custom:
-            return "Custom message sent to Steve."
+            return jsonify("Custom message sent to Steve."), 200
         else:
-            return "Default message sent to Steve."
+            return jsonify("Default message sent to Steve."), 200
     
     except Exception as e:
-        return str(e)
+        return str(e), 400
 
 # Twilio webhook testing command:
 # LOCAL: twilio phone-numbers:update "+12244878383" --sms-url="http://localhost:5000/sms"
@@ -88,4 +92,4 @@ def reply_to_sms():
         return str(error_response)
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(host='0.0.0.0', debug = True)
