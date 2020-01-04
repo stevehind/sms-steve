@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import './InputForm.css';
 import api from './api.js';
 
-const validateForm = (errors) => {
+const validateForm = (inputs, errors) => {
     let valid = true;
     Object.values(errors).forEach(
         // If there is an error String, set valid to false
         (val) => val.length > 0 && (valid = false)  
     );
+    Object.values(inputs).forEach(
+        (val) => val.length === 0 && (valid = false)
+    );
+
     return valid;
 }
 
@@ -27,6 +31,11 @@ class InputForm extends Component {
                 sender_name: '',
                 sender_number: '',
                 sender_message: ''    
+            },
+            inputs: {
+                sender_name: '',
+                sender_number: '',
+                sender_message: ''
             }
         }
         
@@ -37,6 +46,7 @@ class InputForm extends Component {
         event.preventDefault();
         const {name, value} = event.target;
         let errors = this.state.errors;
+        let inputs = this.state.inputs;
 
         switch (name) {
             case 'sender_name':
@@ -44,26 +54,29 @@ class InputForm extends Component {
                     value.length < 2
                     ? 'Name must contain at least two characters.'
                     : '';
+                inputs.sender_name = value;
                 break;
             case 'sender_number':
                 errors.sender_number =
-                    value.length !== 12
-                    ? 'Enter phone number with 11 digits (incl. int`l code) starting with +'
+                    (value.length < 11 || value.length >12)
+                    ? 'Enter phone number with 11 digits, incl. int`l code and start with +'
                     : '';
+                inputs.sender_number = value;    
                 break;
             case 'sender_message':
                 errors.sender_message =
                     value.length > 120
                     ? 'Messages need to be <120 characters because this app is old school.'
                     : '';
+                inputs.sender_message = value;    
                 break;
             default:
                 break;
         }
 
-        this.setState({errors, [name]: value});
+        this.setState({errors, inputs});
 
-        if(validateForm(this.state.errors)) {
+        if(validateForm(this.state.inputs, this.state.errors)) {
             console.log('Valid Form');
             this.setState({
                 valid: true,
@@ -149,37 +162,37 @@ class InputForm extends Component {
                     <h2>Just like using your phone...</h2>
                     <h3>...except a web app...</h3>
                     <h4>...and also dumber.</h4>
-                    <h4>Enter your details and message below.</h4>
+                    <h5>Enter your details and message below, then hit send to SMS Steve.</h5>
                     <div className="sr-combo-inputs" style={style}>
                         <div className="sr-combo-inputs-row">
                             <input
                                 type="text"
                                 name="sender_name"
                                 placeholder="Name - This will tell Steve who's texting."
-                                autoComplete="cardholder"
                                 className="sr-input"
+                                autoComplete="cardholder"
                                 onChange={this.handleChange}
                             />
                             {errors.sender_name.length < 2 && <span style={{color:'red'}}>{errors.sender_name}</span>}
                             <input
                                 type="text"
                                 name="sender_number"
-                                placeholder="Your number - Format like +12244878383."
-                                autoComplete="cardholder"
+                                placeholder="Enter phone number with int'l code."
                                 className="sr-input"
+                                autoComplete="cardholder"
                                 onChange={this.handleChange}
                             />
                             {errors.sender_number.length !== 12 && <span style={{color:'red'}}>{errors.sender_number}</span>}
-                            <input
+                            <textarea
                                 type="text"
                                 name="sender_message"
                                 placeholder="Your message. 120 character max."
-                                autoComplete="cardholder"
                                 className="sr-input"
+                                autoComplete="cardholder"
                                 onChange={this.handleChange}
                             />
                             {errors.sender_message.length > 120 && <span style={{color:'red'}}>{errors.sender_message}</span>}
-                        <div>
+                        <div className="pad-bottom" style={{color:'red', padding: 5}}>
                             {this.state.failed ? "Sending message failed. Try again." : null}
                         </div>
                         </div>

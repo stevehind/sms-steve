@@ -1,1 +1,4 @@
-web: gunicorn server:app
+#web: gunicorn server:app
+web: npm run dist && npm run gunicorn
+server: npm run gunicorn
+webpackdev: npm start

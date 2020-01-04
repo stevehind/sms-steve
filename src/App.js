@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-          <p>An app to send an <Emoji symbol="☎️"/>SMS<Emoji symbol="☎️"/> to <a href="http://www.stevehind.me" className="">Steve</a>.</p>
+          <p><Emoji symbol="☎️"/> SMS<a href="http://www.stevehind.me" className=""> Steve </a><Emoji symbol="☎️"/></p>
       </header>
         <div className="App-body">
           <InputForm/>
