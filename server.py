@@ -18,7 +18,6 @@ client = Client(account_sid, auth_token)
 to_number = os.getenv('TO_NUMBER')
 from_number = os.getenv('FROM_NUMBER')
 
-
 # Define the app
 app = Flask(
     __name__,
