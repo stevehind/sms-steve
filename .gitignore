@@ -1,3 +1,2 @@
-.env
-client/build/
+build/
 .vscode/
