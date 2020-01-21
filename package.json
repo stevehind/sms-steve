@@ -22,7 +22,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build" 
   },
-  "homepage": "http://stevehind.me/sms-steve",
+  "homepage": "https://stevehind.github.io/sms-steve",
   "eslintConfig": {
     "extends": "react-app"
   },

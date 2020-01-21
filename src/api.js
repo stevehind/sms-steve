@@ -3,6 +3,7 @@ const send_sms = options => {
         .fetch(`https://sms-22448-steve.herokuapp.com/web-sms`, {
             method: "POST",
             headers: {
+                "Access-Control-Allow-Origin":"https://stevehind.github.io/",
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(options)
