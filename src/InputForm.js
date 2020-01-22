@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import './InputForm.css';
 import api from './api.js';
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 const validateForm = (inputs, errors) => {
     let valid = true;
@@ -40,6 +42,13 @@ class InputForm extends Component {
         }
         
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleNumberChange = event => {
+        const {name, value} = event.target;
+        let inputs = this.state.inputs;
+        
+        inputs.sender_number = value
     }
 
     handleChange = event => {
@@ -174,13 +183,14 @@ class InputForm extends Component {
                                 onChange={this.handleChange}
                             />
                             {errors.sender_name.length < 2 && <span style={{color:'red'}}>{errors.sender_name}</span>}
-                            <input
-                                type="text"
+                            <PhoneInput
                                 name="sender_number"
-                                placeholder="Enter phone number with int'l code."
+                                defaultCountry="US"
+                                countrySelectProps={{ unicodeFlags: true}}
+                                placeholder="Enter phone number."
                                 className="sr-input"
                                 autoComplete="cardholder"
-                                onChange={this.handleChange}
+                                onChange={this.handleNumberChange}
                             />
                             {errors.sender_number.length !== 12 && <span style={{color:'red'}}>{errors.sender_number}</span>}
                             <textarea
