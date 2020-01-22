@@ -98,9 +98,9 @@ class InputForm extends Component {
 
         api
         .send_sms({
-            name: this.state.sender_name,
-            number: this.state.sender_number,
-            message: this.state.sender_message
+            name: this.state.inputs.sender_name,
+            number: this.state.inputs.sender_number,
+            message: this.state.inputs.sender_message
         })
         .then(payload => {
             if (payload.error) {
