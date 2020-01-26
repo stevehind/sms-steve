@@ -1,8 +1,10 @@
 import React, { Component} from "react";
+import ReactPhoneInput from "react-phone-input-2";
+import './index.css';
 import './InputForm.css';
+import 'react-phone-input-2/lib/bootstrap.css';
 import api from './api.js';
-import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
+import validator from "validator";
 
 const validateForm = (inputs, errors) => {
     let valid = true;
@@ -44,11 +46,38 @@ class InputForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleNumberChange = event => {
-        const {name, value} = event.target;
+    handleNumberChange = value => {
         let inputs = this.state.inputs;
-        
-        inputs.sender_number = value
+        let errors = this.state.errors;
+
+        inputs.sender_number = value;
+
+        let validation = validator.isMobilePhone(inputs.sender_number);
+
+        errors.sender_number = 
+            validation
+            ? ''
+            : "This is likely not a valid number and you can't submit it, please check it.";
+
+        this.setState({errors, inputs})
+
+        if(validateForm(this.state.inputs, this.state.errors)) {
+            console.log('Valid Form');
+            this.setState({
+                valid: true,
+                disabled: false,
+                btnColor: 'blue'
+            })
+        } else {
+            console.log('Invalid form');
+            this.setState({
+                valid: false,
+                disabled: true,
+                btnColor: 'lightblue'
+            })
+        }
+
+        console.log(validation);
     }
 
     handleChange = event => {
@@ -65,17 +94,10 @@ class InputForm extends Component {
                     : '';
                 inputs.sender_name = value;
                 break;
-            case 'sender_number':
-                errors.sender_number =
-                    (value.length < 11 || value.length >12)
-                    ? 'Enter phone number with 11 digits, incl. int`l code and start with +'
-                    : '';
-                inputs.sender_number = value;    
-                break;
             case 'sender_message':
                 errors.sender_message =
-                    value.length > 120
-                    ? 'Messages need to be <120 characters because this app is old school.'
+                    value.length > 280
+                    ? 'Messages need to be <280 characters. No `War and Peace`, please.'
                     : '';
                 inputs.sender_message = value;    
                 break;
@@ -174,34 +196,37 @@ class InputForm extends Component {
                     <h5>Enter your details and message below, then hit send to SMS Steve.</h5>
                     <div className="sr-combo-inputs" style={style}>
                         <div className="sr-combo-inputs-row">
+                            <p className="no-margin-bottom text-left">Your name:</p>
                             <input
                                 type="text"
                                 name="sender_name"
-                                placeholder="Name - This will tell Steve who's texting."
+                                placeholder="I can't really make you put in your real name, can I?"
                                 className="sr-input"
                                 autoComplete="cardholder"
                                 onChange={this.handleChange}
                             />
-                            {errors.sender_name.length < 2 && <span style={{color:'red'}}>{errors.sender_name}</span>}
-                            <PhoneInput
+                            {errors.sender_name.length > 0 && <span style={{color:'red'}}>{errors.sender_name}</span>}
+                            <p className="no-margin-bottom text-left">Your number (US only at the moment):</p>
+                            <ReactPhoneInput
                                 name="sender_number"
-                                defaultCountry="US"
-                                countrySelectProps={{ unicodeFlags: true}}
-                                placeholder="Enter phone number."
-                                className="sr-input"
+                                country="us"
+                                enableAreaCodes={true}
+                                value={this.state.sender_number}
                                 autoComplete="cardholder"
                                 onChange={this.handleNumberChange}
+                                className="sr-input"
                             />
-                            {errors.sender_number.length !== 12 && <span style={{color:'red'}}>{errors.sender_number}</span>}
+                            {errors.sender_number.length > 0 && <span style={{color:'red'}}>{errors.sender_number}</span>}
+                            <p className="no-margin-bottom text-left">Your message:</p>
                             <textarea
                                 type="text"
                                 name="sender_message"
-                                placeholder="Your message. 120 character max."
+                                placeholder="280 character max. Brevity is the soul of wit."
                                 className="sr-input"
                                 autoComplete="cardholder"
                                 onChange={this.handleChange}
                             />
-                            {errors.sender_message.length > 120 && <span style={{color:'red'}}>{errors.sender_message}</span>}
+                            {errors.sender_message.length > 0 && <span style={{color:'red'}}>{errors.sender_message}</span>}
                         <div className="pad-bottom" style={{color:'red', padding: 5}}>
                             {this.state.failed ? "Sending message failed. Try again." : null}
                         </div>
