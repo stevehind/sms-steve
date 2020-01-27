@@ -52,14 +52,16 @@ class InputForm extends Component {
 
         inputs.sender_number = value;
 
+        console.log(inputs.sender_number);
+
         let validation = validator.isMobilePhone(inputs.sender_number);
+
+        console.log(validation);    
 
         errors.sender_number = 
             validation
             ? ''
             : "This is likely not a valid number and you can't submit it, please check it.";
-
-        this.setState({errors, inputs})
 
         if(validateForm(this.state.inputs, this.state.errors)) {
             console.log('Valid Form');
@@ -76,8 +78,6 @@ class InputForm extends Component {
                 btnColor: 'lightblue'
             })
         }
-
-        console.log(validation);
     }
 
     handleChange = event => {
@@ -140,7 +140,7 @@ class InputForm extends Component {
                     disabled: false,
                     proessing: false
                 });
-                console.log("[error", payload.error);
+                console.log("Error", payload.error);
             } else {
                 this.setState({
                     succeeded: true,
@@ -207,14 +207,16 @@ class InputForm extends Component {
                             />
                             {errors.sender_name.length > 0 && <span style={{color:'red'}}>{errors.sender_name}</span>}
                             <p className="no-margin-bottom text-left">Your number (US only at the moment):</p>
+                            <p className="no-margin-bottom text-left"><i>(Getting this input component to be the same width as the others is beyond me. Any help warmly appreciated!)</i></p>
+
                             <ReactPhoneInput
                                 name="sender_number"
+                                className="react-tel-input"
                                 country="us"
                                 enableAreaCodes={true}
-                                value={this.state.sender_number}
                                 autoComplete="cardholder"
+                                value={this.state.inputs.sender_number}
                                 onChange={this.handleNumberChange}
-                                className="sr-input"
                             />
                             {errors.sender_number.length > 0 && <span style={{color:'red'}}>{errors.sender_number}</span>}
                             <p className="no-margin-bottom text-left">Your message:</p>

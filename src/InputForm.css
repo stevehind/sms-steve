@@ -2,14 +2,18 @@
     margin: 20px 0;
   }
   
-  .sr-input {
+.sr-input {
     font-size: 16px;
   }
   
-  .sr-card-element {
+.sr-card-element {
     padding-top: 12px;
   }
   
-  .btn {
+.btn {
     font-size: 16px;
   }
+
+.full-width {
+  width: 100%;
+}
